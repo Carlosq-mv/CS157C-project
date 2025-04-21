@@ -1,4 +1,6 @@
-```shell (for MAC)
+
+# shell (for MAC)
+```
 # create env
 $ python3 -m venv venv
 
@@ -7,8 +9,10 @@ $ source venv/bin/activate
 
 # install 
 $ pip3 install -r requirements.txt
+```
 
-shell (for Windows)
+# shell (for Windows)
+```
 # install virtualenv
 pip install virtualenv
 
