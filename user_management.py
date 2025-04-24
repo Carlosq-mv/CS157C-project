@@ -101,3 +101,76 @@ class UserManagement:
             self.current_user = self.db.get_user_by_username(self.current_user['username'])[0]['u']
         else:
             print("Error: Failed to update profile!") 
+
+    def most_followed_profiles(self):
+        if not self.current_user:
+            print("Error: Please login first!")
+            return
+
+        print("\n=== Most Followed Users ===") 
+        limit = input("Enter the number of top followed users you want to view (Max 20): ").strip()
+
+        try:
+            limit = int(limit)
+            if limit > 20:
+                print("You can only view a maximum of 20 users. Setting limit to 20.")
+                limit = 20
+            elif limit < 1:
+                print("Please enter a number greater than 0")
+                return
+        except ValueError:
+            print("Invalid type. Please enter a valid integer")
+            return
+
+        print("loading...") 
+        users = self.db.most_followed(limit)
+
+        if not users:
+            print(f"No users are in the database at the momemt")
+        else:
+            print(f"\n=== Top {limit} Most Followed Users ===")  
+            for user in users:
+                print(f"Name: {user["name"]}")
+                print(f"Username: {user["username"]}")
+                print(f"Followers: {user["follower_count"]}")
+                print("-" * 25) 
+
+    def search_profile(self):
+        if not self.current_user:
+            print("Error: Please login first!")
+            return
+
+        print("\n=== Search User ===")
+        print("Enter the name or username of the user you're looking for.")
+        search_query = input("Name or Username (substring allowed): ").strip()
+
+        print("loading...") 
+        users = self.db.search_user(search_query)
+
+        print("\n=== Results ===")  
+        if not users:
+            print(f"No user found with the name or username '{search_query}'")
+        else:
+            for user in users:
+                u = user["u"]
+                print(f"Name: {u["name"]}")
+                print(f"Username: {u["username"]}")
+                print(f"Bio: {u["bio"] if u["bio"] else "N/A"}")
+                print("-" * 100)
+
+    def recommended_profiles(self):
+        if not self.current_user:
+            print("Error: Please login first!")
+            return
+
+        print("\n=== Recommended Profiles To Follow ===")
+        print(self.current_user['username'])
+        users = self.db.recommendations(self.current_user["username"])
+        if not users:
+            print("No recommendations available at the moment.")
+            return
+
+        for user in users:
+            print(f"Name: {user["name"]}")
+            print(f"Username: {user["username"]}")
+            print("-" * 25)

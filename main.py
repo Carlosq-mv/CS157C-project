@@ -6,7 +6,10 @@ def display_menu():
     print("2. Login")
     print("3. View Profile")
     print("4. Edit Profile")
-    print("5. Exit")
+    print("5. Friend Recommendations")
+    print("6. Search Profile")
+    print("7. View Most Followed Profiles")
+    print("8. Exit")
     return input("Enter your choice (1-5): ").strip()
 
 def main():
@@ -24,6 +27,12 @@ def main():
         elif choice == "4":
             user_manager.edit_profile()
         elif choice == "5":
+            user_manager.recommended_profiles()
+        elif choice == "6":
+            user_manager.search_profile()
+        elif choice == "7":
+            user_manager.most_followed_profiles()
+        elif choice == "8":
             print("Goodbye!")
             break
         else:
