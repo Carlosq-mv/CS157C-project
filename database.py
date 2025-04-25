@@ -65,3 +65,32 @@ class Database:
         RETURN u
         """
         return self.execute_query(query, parameters) 
+
+    def search_user(self, query_item):
+        query = """
+        MATCH (u:User)
+        WHERE toLower(u.username) CONTAINS toLower($query_item) 
+        OR toLower(u.name) CONTAINS toLower($query_item)
+        RETURN u
+        """
+        return self.execute_query(query, {'query_item': query_item})
+    
+    def most_followed(self, limit):
+        query = """
+        MATCH (f:User)<-[:FOLLOWS]-(u:User)
+        WITH f.username AS username, f.name AS name, COUNT(u) AS follower_count
+        RETURN name, username, follower_count
+        ORDER BY follower_count DESC
+        LIMIT $limit
+        """
+        return self.execute_query(query, {'limit': limit})
+    
+    def recommendations(self, username):
+        query = """
+        MATCH (u:User {username: $username})-[:FOLLOWS]->(friend:User)-[:FOLLOWS]->(recommended:User)
+        WHERE NOT (u)-[:FOLLOWS]->(recommended) AND u <> recommended
+        RETURN recommended.username AS username, recommended.name AS name, COUNT(friend) AS mutual_friends
+        ORDER BY mutual_friends DESC
+        LIMIT 10
+        """
+        self.execute_query(query, {'username': username})
