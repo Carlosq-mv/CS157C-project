@@ -1,7 +1,7 @@
 from user_management import UserManagement
 
 def display_menu():
-    print("\n=== Social Network Application ===")
+    print("\n=== SocialNet: Social Network Application ===")
     print("1. Register")
     print("2. Login")
     print("3. View Profile")
