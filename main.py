@@ -6,11 +6,15 @@ def display_menu():
     print("2. Login")
     print("3. View Profile")
     print("4. Edit Profile")
-    print("5. Friend Recommendations")
-    print("6. Search Profile")
-    print("7. View Most Followed Profiles")
-    print("8. Exit")
-    return input("Enter your choice (1-5): ").strip()
+    print("5. Follow user")
+    print("6. Unfollow user")
+    print("7. View friends")
+    print("8. View mutual friends")
+    print("9. Friend Recommendations")
+    print("10. Search Profile")
+    print("11. View Most Followed Profiles")
+    print("12. Exit")
+    return input("Enter your choice (1-12): ").strip()
 
 def main():
     user_manager = UserManagement()
@@ -27,13 +31,21 @@ def main():
         elif choice == "4":
             user_manager.edit_profile()
         elif choice == "5":
-            user_manager.recommended_profiles()
+            user_manager.follow_user()
         elif choice == "6":
-            user_manager.search_profile()
+            user_manager.unfollow_user()
         elif choice == "7":
-            user_manager.most_followed_profiles()
+            user_manager.view_connections()
         elif choice == "8":
-            print("Goodbye!")
+            user_manager.view_mutual_friends()
+        elif choice == "9":
+            user_manager.recommended_profiles()
+        elif choice == "10":
+            user_manager.search_profile()
+        elif choice == "11":
+            user_manager.most_followed_profiles()
+        elif choice == "12":
+            print("bye!")
             break
         else:
             print("Invalid choice. Please try again.")
