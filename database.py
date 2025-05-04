@@ -95,113 +95,112 @@ class Database:
         """
         self.execute_query(query, {'username': username})
     
-    def follow_user(self, follower_id, followee_id):
-        if follower_id == followee_id:
-            print("You cannot follow yourself.")
-            return
-
-    # Step 1: Check if both users exists.
+    def follow_user(self, my_username, other_username):
+        # Step 1: Check if both users exist
         check_users_query = """
-        MATCH (a:User {id: $follower_id}), (b:User {id: $followee_id})
-        RETURN COUNT(a) > 0 AS follower_exists, COUNT(b) > 0 AS followee_exists
+        MATCH (a:User {username: $my_username})
+        MATCH (b:User {username: $other_username})
+        RETURN COUNT(a) AS follower_exists, COUNT(b) AS followee_exists
         """
         result = self.execute_query(check_users_query, {
-            'follower_id': follower_id,
-            'followee_id': followee_id
-            })
-        
-        if not result or not result[0]['follower_exists'] or not result[0]['followee_exists']:
+            'my_username': my_username,
+            'other_username': other_username
+        })
+
+        if not result or result[0]['follower_exists'] == 0 or result[0]['followee_exists'] == 0:
             print("One or both users do not exist.")
             return
 
-    # Step 2: Check if the relationship already exists
+        # Step 2: Check if the relationship already exists
         rel_check_query = """
-        MATCH (a:User {id: $follower_id})-[r:FOLLOWS]->(b:User {id: $followee_id})
+        MATCH (a:User {username: $my_username})-[r:FOLLOWS]->(b:User {username: $other_username})
         RETURN COUNT(r) AS rel_count
         """
         rel_result = self.execute_query(rel_check_query, {
-            'follower_id': follower_id,
-            'followee_id': followee_id
+            'my_username': my_username,
+            'other_username': other_username
         })
-        
+
         if rel_result[0]['rel_count'] > 0:
             print("You already follow this user.")
             return
 
-    # Step 3: Create the relationship
+        # Step 3: Create the relationship
         create_query = """
-        MATCH (a:User {id: $follower_id}), (b:User {id: $followee_id})
+        MATCH (a:User {username: $my_username}), (b:User {username: $other_username})
         MERGE (a)-[:FOLLOWS]->(b)
         """
         self.execute_query(create_query, {
-            'follower_id': follower_id,
-            'followee_id': followee_id
+            'my_username': my_username,
+            'other_username': other_username
         })
-        print(f"You are now following user {followee_id}.")
+
+        print(f"You are now following user {other_username}.")
 
     
-    def unfollow_user(self, follower_id, followee_id):
-        if follower_id == followee_id:
+    def unfollow_user(self, my_username, other_username):
+        if my_username == other_username:
             print("You cannot unfollow yourself.")
             return
+
         # Step 1: Check if both users exist
         check_users_query = """
-        MATCH (a:User {id: $follower_id}), (b:User {id: $followee_id})
-        RETURN COUNT(a) > 0 AS follower_exists, COUNT(b) > 0 AS followee_exists
+        MATCH (a:User {username: $my_username})
+        MATCH (b:User {username: $other_username})
+        RETURN COUNT(a) AS follower_exists, COUNT(b) AS followee_exists
         """
         result = self.execute_query(check_users_query, {
-            'follower_id': follower_id,
-            'followee_id': followee_id
-            })
-        if not result or not result[0]['follower_exists'] or not result[0]['followee_exists']:
+            'my_username': my_username,
+            'other_username': other_username
+        })
+
+        if not result or result[0]['follower_exists'] == 0 or result[0]['followee_exists'] == 0:
             print("One or both users do not exist.")
             return
 
-    # Step 2: Check if the FOLLOWS relationship exists
+        # Step 2: Check if the FOLLOWS relationship exists
         check_relationship_query = """
-        MATCH (a:User {id: $follower_id})-[r:FOLLOWS]->(b:User {id: $followee_id})
+        MATCH (a:User {username: $my_username})-[r:FOLLOWS]->(b:User {username: $other_username})
         RETURN COUNT(r) AS rel_count
         """
         rel_result = self.execute_query(check_relationship_query, {
-            'follower_id': follower_id,
-            'followee_id': followee_id
+            'my_username': my_username,
+            'other_username': other_username
         })
+
         if rel_result[0]['rel_count'] == 0:
             print("You are not following this user.")
             return
 
-    # Step 3: Delete the relationship
+        # Step 3: Delete the relationship
         delete_query = """
-        MATCH (a:User {id: $follower_id})-[r:FOLLOWS]->(b:User {id: $followee_id})
+        MATCH (a:User {username: $my_username})-[r:FOLLOWS]->(b:User {username: $other_username})
         DELETE r
         """
         self.execute_query(delete_query, {
-            'follower_id': follower_id,
-            'followee_id': followee_id
+            'my_username': my_username,
+            'other_username': other_username
         })
-        print(f"You have unfollowed user {followee_id}.")
+
+        print(f"You have unfollowed user {other_username}.")
 
 
-    def get_connections_combined(self, user_id):
+
+    def get_connections_combined(self, my_username):
         query = """
-        MATCH (u:User {id: $user_id})
+        MATCH (u:User {username: $my_username})
         OPTIONAL MATCH (follower:User)-[:FOLLOWS]->(u)
-        WITH u, COLLECT({id: follower.id, name: follower.name}) AS followers
+        WITH u, COLLECT({username: follower.username, name: follower.name}) AS followers
         OPTIONAL MATCH (u)-[:FOLLOWS]->(followee:User)
-        WITH followers, COLLECT({id: followee.id, name: followee.name}) AS following
+        WITH followers, COLLECT({username: followee.username, name: followee.name}) AS following
         RETURN followers, following
         """
-        result = self.execute_query(query, {'user_id': user_id})
+        result = self.execute_query(query, {'my_username': my_username})
         return result[0] if result else {'followers': [], 'following': []}
 
-    
-    def get_mutual_friends(self, user_id1, user_id2):
+    def get_mutual_friends(self, username1, username2):
         query = """
-        MATCH (a:User {id: $id1})-[:FOLLOWS]->(x:User)<-[:FOLLOWS]-(b:User {id: $id2})
-        RETURN x.id AS id, x.name AS name
+        MATCH (a:User {username: $username1})-[:FOLLOWS]->(x:User)<-[:FOLLOWS]-(b:User {username: $username2})
+        RETURN x.username AS username, x.name AS name
         """
-        return self.execute_query(query, {'id1': user_id1, 'id2': user_id2})
-
-    
-    
-
+        return self.execute_query(query, {'username1': username1, 'username2': username2})

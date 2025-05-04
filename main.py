@@ -1,18 +1,18 @@
 from user_management import UserManagement
 
 def display_menu():
-    print("\n=== Social Network Application ===")
+    print("\n=== Welcome to SocialNet ===")
     print("1. Register")
     print("2. Login")
     print("3. View Profile")
     print("4. Edit Profile")
-    print("5. Friend Recommendations")
-    print("6. Search Profile")
-    print("7. View Most Followed Profiles")
-    print("8. Follow users")
-    print("9. Unfollow users")
-    print("10. View friends")
-    print("11. View mutual friends")
+    print("5. Follow User")
+    print("6. Unfollow User")
+    print("7. View Friends")
+    print("8. View Mutual Friends")
+    print("9. Friend Recommendations")
+    print("10. Search Profile")
+    print("11. View Most Followed Profiles")
     print("12. Exit")
     return input("Enter your choice (1-12): ").strip()
 
@@ -31,21 +31,21 @@ def main():
         elif choice == "4":
             user_manager.edit_profile()
         elif choice == "5":
-            user_manager.recommended_profiles()
-        elif choice == "6":
-            user_manager.search_profile()
-        elif choice == "7":
-            user_manager.most_followed_profiles()
-        elif choice == "8":
             user_manager.follow_user()
-        elif choice == "9":
+        elif choice == "6":
             user_manager.unfollow_user()
-        elif choice == "10":
+        elif choice == "7":
             user_manager.view_connections()
-        elif choice == "11":
+        elif choice == "8":
             user_manager.view_mutual_friends()
+        elif choice == "9":
+            user_manager.recommended_profiles()
+        elif choice == "10":
+            user_manager.search_profile()
+        elif choice == "11":
+            user_manager.most_followed_profiles()
         elif choice == "12":
-            print("bye!")
+            print("Goodbye")
             break
         else:
             print("Invalid choice. Please try again.")

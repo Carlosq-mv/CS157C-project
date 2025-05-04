@@ -164,7 +164,6 @@ class UserManagement:
             return
 
         print("\n=== Recommended Profiles To Follow ===")
-        print(self.current_user['username'])
         users = self.db.recommendations(self.current_user["username"])
         if not users:
             print("No recommendations available at the moment.")
@@ -176,39 +175,51 @@ class UserManagement:
             print("-" * 25)
     
     def follow_user(self):
-        follower_id = input("Your User ID: ").strip()
-        followee_id = input("Enter the ID of the user you want to follow: ").strip()
-        self.db.follow_user(follower_id, followee_id)
-        
+        if not self.current_user:
+            print("Error: Please login first!")
+            return
+
+        other_username = input("Enter the username of the user you want to follow: ").strip()
+        self.db.follow_user(self.current_user['username'], other_username)
+
 
     def unfollow_user(self):
-        follower_id = input("Your User ID: ").strip()
-        followee_id = input("Enter the ID of the user you want to unfollow: ").strip()
-        self.db.unfollow_user(follower_id, followee_id)
+        if not self.current_user:
+            print("Error: Please login first!")
+            return
+
+        other_username = input("Enter the username of the user you want to unfollow: ").strip()
+        self.db.unfollow_user(self.current_user['username'], other_username)
         
 
     def view_connections(self):
-        user_id = input("Enter your User ID: ").strip()
-        connections = self.db.get_connections_combined(user_id)
+        if not self.current_user:
+            print("Error: Please login first!")
+            return
+
+        connections = self.db.get_connections_combined(self.current_user['username'])
         print("\nFollowers:")
         if connections['followers']:
             for user in connections['followers']:
-                print(f"ID: {user['id']}, Name: {user['name']}")
+                print(f"Username: {user['username']} - Name: {user['name']}")
         else:
             print("No followers found.")
         
         print("\nFollowing:")
         if connections['following']:
             for user in connections['following']:
-                print(f"ID: {user['id']}, Name: {user['name']}")
+                print(f"Username: {user['username']} - Name: {user['name']}")
         else:
             print("You're not following anyone.")
 
     
     def view_mutual_friends(self):
-        user_id1 = input("Enter your User ID: ").strip()
-        user_id2 = input("Enter other User ID to check mutuals: ").strip()
-        mutuals = self.db.get_mutual_friends(user_id1, user_id2)
+        if not self.current_user:
+            print("Error: Please login first!")
+            return
+
+        user2 = input("Enter other username to check mutuals: ").strip()
+        mutuals = self.db.get_mutual_friends(self.current_user['username'], user2)
         
         print("\nMutual Friends:")
         
@@ -216,5 +227,5 @@ class UserManagement:
             for user in mutuals:
                 print(f"ID: {user['id']}, Name: {user['name']}")
         else:
-            print(f"No mutual friends found between user {user_id1} and user {user_id2}.")
+            print(f"No mutual friends found between yourself and {user2}.")
 
