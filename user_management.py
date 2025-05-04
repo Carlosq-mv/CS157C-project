@@ -225,7 +225,7 @@ class UserManagement:
         
         if mutuals:
             for user in mutuals:
-                print(f"ID: {user['id']}, Name: {user['name']}")
+                print(f"Username: {user['username']}")
         else:
             print(f"No mutual friends found between yourself and {user2}.")
 
