@@ -14,7 +14,7 @@ def display_menu():
     print("10. View friends")
     print("11. View mutual friends")
     print("12. Exit")
-    return input("Enter your choice (1-5): ").strip()
+    return input("Enter your choice (1-12): ").strip()
 
 def main():
     user_manager = UserManagement()

@@ -130,9 +130,9 @@ class UserManagement:
         else:
             print(f"\n=== Top {limit} Most Followed Users ===")  
             for user in users:
-                print(f"Name: {user["name"]}")
-                print(f"Username: {user["username"]}")
-                print(f"Followers: {user["follower_count"]}")
+                print(f"Name: {user['name']}")
+                print(f"Username: {user['username']}")
+                print(f"Followers: {user['follower_count']}")
                 print("-" * 25) 
 
     def search_profile(self):
@@ -153,9 +153,9 @@ class UserManagement:
         else:
             for user in users:
                 u = user["u"]
-                print(f"Name: {u["name"]}")
-                print(f"Username: {u["username"]}")
-                print(f"Bio: {u["bio"] if u["bio"] else "N/A"}")
+                print(f"Name: {u['name']}")
+                print(f"Username: {u['username']}")
+                print(f"Bio: {u['bio'] if u['bio'] else 'N/A'}")
                 print("-" * 100)
 
     def recommended_profiles(self):
@@ -171,8 +171,8 @@ class UserManagement:
             return
 
         for user in users:
-            print(f"Name: {user["name"]}")
-            print(f"Username: {user["username"]}")
+            print(f"Name: {user['name']}")
+            print(f"Username: {user['username']}")
             print("-" * 25)
     
     def follow_user(self):
