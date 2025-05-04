@@ -33,7 +33,7 @@ def main():
         elif choice == "7":
             user_manager.most_followed_profiles()
         elif choice == "8":
-            print("Goodbye!")
+            print("Goodbe!")
             break
         else:
             print("Invalid choice. Please try again.")
