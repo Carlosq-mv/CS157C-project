@@ -9,7 +9,11 @@ def display_menu():
     print("5. Friend Recommendations")
     print("6. Search Profile")
     print("7. View Most Followed Profiles")
-    print("8. Exit")
+    print("8. Follow users")
+    print("9. Unfollow users")
+    print("10. View friends")
+    print("11. View mutual friends")
+    print("12. Exit")
     return input("Enter your choice (1-5): ").strip()
 
 def main():
@@ -33,7 +37,15 @@ def main():
         elif choice == "7":
             user_manager.most_followed_profiles()
         elif choice == "8":
-            print("Goodbe!")
+            user_manager.follow_user()
+        elif choice == "9":
+            user_manager.unfollow_user()
+        elif choice == "10":
+            user_manager.view_connections()
+        elif choice == "11":
+            user_manager.view_mutual_friends()
+        elif choice == "12":
+            print("bye!")
             break
         else:
             print("Invalid choice. Please try again.")
