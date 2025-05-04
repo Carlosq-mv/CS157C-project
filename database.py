@@ -122,7 +122,7 @@ class Database:
         })
 
         if not result or not result[0]['follower_exists'] or not result[0]['followee_exists']:
-            print("One or both users do not exist.")
+            print("One user do not exist.")
             return
 
         check_relationship_query = """

@@ -140,7 +140,7 @@ class UserManagement:
         other_username = input("Enter the username of the other user to check mutual friends with: ").strip()
         
         if other_username == self.current_user['username']:
-            print("You cannot check mutual friends with yourself.")
+            print("You cannot check mutual friends with your name.")
             return
         mutuals = self.db.get_mutual_friends(self.current_user['username'], other_username)
         print("\nMutual Friends:")
